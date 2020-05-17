@@ -47,7 +47,11 @@ public class DeathScreen extends CoreScreenLayer {
             CoreRegistry.get(LocalPlayer.class).getClientEntity().send(new RespawnRequestEvent());
             CoreRegistry.get(GameEngine.class).changeState(new StateMainMenu());
         });
-        WidgetUtil.trySubscribe(this, "exitGame", widget -> CoreRegistry.get(GameEngine.class).shutdown());
+        WidgetUtil.trySubscribe(this, "exitGame", widget -> {
+            // one loose idea for respawn on rage-quit, won't handle other exits though. Causes "org.terasology.audio.openAL.OpenALException: OpenAL Error (40963) at Setting listener orientation - Invalid Value"
+            // CoreRegistry.get(LocalPlayer.class).getClientEntity().send(new RespawnRequestEvent());
+            CoreRegistry.get(GameEngine.class).shutdown();
+        });
     }
 
     public void setDeathDetails(String instigatorName, String damageTypeName) {

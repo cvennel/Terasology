@@ -268,24 +268,29 @@ public class OpenALManager implements AudioManager {
 
     @Override
     public void updateListener(Vector3fc position, Quaternionfc orientation, Vector3fc velocity) {
-        AL10.alListener3f(AL10.AL_VELOCITY, velocity.x(), velocity.y(), velocity.z());
+        try{
+            AL10.alListener3f(AL10.AL_VELOCITY, velocity.x(), velocity.y(), velocity.z());
 
-        OpenALException.checkState("Setting listener velocity");
+            OpenALException.checkState("Setting listener velocity");
 
-        org.joml.Vector3f dir = JomlUtil.from(Direction.FORWARD.getVector3f())
-                .rotate(orientation);
-        org.joml.Vector3f up = JomlUtil.from(Direction.UP.getVector3f())
-                .rotate(orientation);
+            org.joml.Vector3f dir = JomlUtil.from(Direction.FORWARD.getVector3f())
+                    .rotate(orientation);
+            org.joml.Vector3f up = JomlUtil.from(Direction.UP.getVector3f())
+                    .rotate(orientation);
 
-        FloatBuffer listenerOri = BufferUtils.createFloatBuffer(6)
-                .put(new float[] {dir.x, dir.y, dir.z, up.x, up.y, up.z});
-        listenerOri.flip();
-        AL10.alListener(AL10.AL_ORIENTATION, listenerOri);
-        OpenALException.checkState("Setting listener orientation");
+            FloatBuffer listenerOri = BufferUtils.createFloatBuffer(6)
+                    .put(new float[] {dir.x, dir.y, dir.z, up.x, up.y, up.z});
+            listenerOri.flip();
+            AL10.alListener(AL10.AL_ORIENTATION, listenerOri);
+            OpenALException.checkState("Setting listener orientation");
 
-        listenerPosition.set(position);
-        AL10.alListener3f(AL10.AL_POSITION, position.x(), position.y(), position.z());
-        OpenALException.checkState("Setting listener position");
+            listenerPosition.set(position);
+            AL10.alListener3f(AL10.AL_POSITION, position.x(), position.y(), position.z());
+            OpenALException.checkState("Setting listener position");
+        }
+        catch (Exception e){
+            logger.info("CV error catch");
+        }
     }
 
     @Override

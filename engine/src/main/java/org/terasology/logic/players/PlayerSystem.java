@@ -178,7 +178,12 @@ public class PlayerSystem extends BaseComponentSystem implements UpdateSubscribe
             character.saveComponent(characterComp);
             character.setOwner(entity);
             if (!character.hasComponent(AliveCharacterComponent.class)) {
+                logger.info("CV player has no alive component");
+                
                 character.addComponent(new AliveCharacterComponent());
+                character.send(new OnPlayerRespawnedEvent());
+            } else {
+                logger.info("CV player is alive");
             }
             Location.attachChild(character, entity, new Vector3f(), new Quat4f(0, 0, 0, 1));
         } else {
